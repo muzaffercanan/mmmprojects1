@@ -1,4 +1,4 @@
-public class NameSurnameBST {
+class NameSurnameBST {
     private NameSurnameBSTNode root;
 
     // Constructor
@@ -7,20 +7,20 @@ public class NameSurnameBST {
     }
 
     // Insert a node into the Name-Surname BST
-    public void insert(String nameSurname) {
-        this.root = insertRec(this.root, nameSurname);
+    public void insert(String nameSurname, Student student) {
+        this.root = insertRec(this.root, nameSurname, student);
     }
 
-    private NameSurnameBSTNode insertRec(NameSurnameBSTNode root, String nameSurname) {
+    private NameSurnameBSTNode insertRec(NameSurnameBSTNode root, String nameSurname, Student student) {
         if (root == null) {
-            root = new NameSurnameBSTNode(nameSurname);
+            root = new NameSurnameBSTNode(nameSurname, student);
             return root;
         }
 
         if (nameSurname.compareTo(root.nameSurname) < 0) {
-            root.left = insertRec(root.left, nameSurname);
+            root.left = insertRec(root.left, nameSurname, student);
         } else if (nameSurname.compareTo(root.nameSurname) > 0) {
-            root.right = insertRec(root.right, nameSurname);
+            root.right = insertRec(root.right, nameSurname, student);
         }
 
         return root;
@@ -68,5 +68,49 @@ public class NameSurnameBST {
             root = root.left;
         }
         return minValue;
+    }
+
+    // Exact search by Name-Surname
+    //...
+    public Student exactSearch(String nameSurname) {
+        return exactSearchRec(this.root, nameSurname);
+    }
+
+    private Student exactSearchRec(NameSurnameBSTNode root, String nameSurname) {
+        if (root == null || root.nameSurname.equals(nameSurname)) {
+            return (root != null) ? root.student : null;
+        }
+
+        if (nameSurname.compareTo(root.nameSurname) < 0) {
+            return exactSearchRec(root.left, nameSurname);
+        }
+
+        return exactSearchRec(root.right, nameSurname);
+    }
+
+    // Interval search by Name-Surname
+    public void intervalSearch(String startNameSurname, String endNameSurname) {
+        intervalSearchRec(this.root, startNameSurname, endNameSurname);
+    }
+
+    private void intervalSearchRec(NameSurnameBSTNode root, String startNameSurname, String endNameSurname) {
+        if (root != null) {
+            // If current node's nameSurname is greater than the startNameSurname,
+            // then search in the left subtree
+            if (root.nameSurname.compareTo(startNameSurname) > 0) {
+                intervalSearchRec(root.left, startNameSurname, endNameSurname);
+            }
+
+            // If current node's nameSurname is within the interval, print it
+            if (root.nameSurname.compareTo(startNameSurname) >= 0 && root.nameSurname.compareTo(endNameSurname) <= 0) {
+                System.out.println("Found student in interval: " + root.student.getName());
+            }
+
+            // If current node's nameSurname is less than the endNameSurname,
+            // then search in the right subtree
+            if (root.nameSurname.compareTo(endNameSurname) < 0) {
+                intervalSearchRec(root.right, startNameSurname, endNameSurname);
+            }
+        }
     }
 }
