@@ -5,25 +5,34 @@ import java.io.IOException;
 public class DataManipulation {
 
     public static void main(String[] args) {
-        // Specify the path to your data file
-        String filePath = "C:/Users/muzca/Desktop/muzo-genel/COURSES/CS/cs201-2023-2024-FALL/lablar/genel-lab-2/input.txt";
+        String filePath = "random_data_.txt";
 
-        // Create instances of IDBST and NameSurnameBST
         IDBST idBST = new IDBST();
         NameSurnameBST nameSurnameBST = new NameSurnameBST();
 
         try {
-            // Read data from the file and manipulate the BSTs
             readDataFromFile(filePath, idBST, nameSurnameBST);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // Example: Delete a student by Name-Surname
-        nameSurnameBST.delete("Mehmet Arda Eren");
+        nameSurnameBST.delete("Leah Anderson Cortez");
 
         // Example: Delete a student by ID
-        idBST.delete(123456);
+        idBST.delete(981883);
+
+        // Example: Exact search by ID
+        //...
+        Student searchedStudentByID = idBST.exactSearch(885462);
+        if (searchedStudentByID != null) {
+            System.out.println("Found student by ID: " + searchedStudentByID.getName());
+        } else {
+            System.out.println("Student with the specified ID not found.");
+        }
+
+        // Example: Interval search by Name-Surname
+        nameSurnameBST.intervalSearch("Joel Williams Robert", "louis");
     }
 
     private static void readDataFromFile(String filePath, IDBST idBST, NameSurnameBST nameSurnameBST)
@@ -31,22 +40,25 @@ public class DataManipulation {
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         String line;
 
+        // Skip the header line
+        reader.readLine();
+
         while ((line = reader.readLine()) != null) {
             // Split the line into components
-            String[] components = line.split(", ");
+            String[] components = line.split(",");
 
             // Extract data from components
-            int ID = Integer.parseInt(components[1]);
-            String nameSurname = components[2] + " " + components[3];
-            int age = Integer.parseInt(components[4]);
-            double GPA = Double.parseDouble(components[5]);
+            int ID = Integer.parseInt(components[0]);
+            String nameSurname = components[1] + " " + components[2];
+            int age = Integer.parseInt(components[3]);
+            double GPA = Double.parseDouble(components[4]);
 
             // Create a Student object
-            Student student = new Student(ID, components[2], components[3], age, GPA);
+            Student student = new Student(ID, components[1], components[2], age, GPA);
 
             // Insert the student into the ID and Name-Surname BSTs
-            idBST.insert(ID);
-            nameSurnameBST.insert(nameSurname);
+            idBST.insert(ID, student);
+            nameSurnameBST.insert(nameSurname, student);
         }
 
         reader.close();
