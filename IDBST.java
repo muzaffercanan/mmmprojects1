@@ -1,5 +1,5 @@
-public class IDBST {
-    private IDBSTNode root;
+class IDBST {
+   IDBSTNode root;
 
     // Constructor
     public IDBST() {
@@ -7,20 +7,20 @@ public class IDBST {
     }
 
     // Insert a node into the ID BST
-    public void insert(int ID) {
-        this.root = insertRec(this.root, ID);
+    public void insert(int ID, Student student) {
+        this.root = insertRec(this.root, ID, student);
     }
 
-    private IDBSTNode insertRec(IDBSTNode root, int ID) {
+    private IDBSTNode insertRec(IDBSTNode root, int ID, Student student) {
         if (root == null) {
-            root = new IDBSTNode(ID);
+            root = new IDBSTNode(ID, student);
             return root;
         }
 
         if (ID < root.ID) {
-            root.left = insertRec(root.left, ID);
+            root.left = insertRec(root.left, ID, student);
         } else if (ID > root.ID) {
-            root.right = insertRec(root.right, ID);
+            root.right = insertRec(root.right, ID, student);
         }
 
         return root;
@@ -39,19 +39,13 @@ public class IDBST {
 
         if (ID < root.ID) {
             root.left = deleteRec(root.left, ID);
-        }
-
-        else if (ID > root.ID) {
+        } else if (ID > root.ID) {
             root.right = deleteRec(root.right, ID);
-        }
-
-        else {
+        } else {
             // Node with only one child or no child
             if (root.left == null) {
                 return root.right;
-            }
-
-            else if (root.right == null) {
+            } else if (root.right == null) {
                 return root.left;
             }
 
@@ -75,14 +69,21 @@ public class IDBST {
         return minValue;
     }
 
-public void insertrec(IDBSTNode root , int ID){
-
-        if(root==null){
-            root = new IDBSTNode(ID);
-        }
-        else if(ID<root.ID){
-            root.left = insertrec(IDBSTNode root, int ID);
-        }
+    // Exact search by ID
+    //...
+    public Student exactSearch(int ID) {
+        return exactSearchRec(this.root, ID);
     }
 
+    private Student exactSearchRec(IDBSTNode root, int ID) {
+        if (root == null || root.ID == ID) {
+            return (root != null) ? root.student : null;
+        }
+
+        if (ID < root.ID) {
+            return exactSearchRec(root.left, ID);
+        }
+
+        return exactSearchRec(root.right, ID);
+    }
 }
